@@ -144,8 +144,7 @@ def get_export_dir():
 
 
 def build_episode_embedding(config):
-  if 'Mini' in FLAGS.model_type:
-    logging.info("RUNNING MINI MODEL")
+  if 'Full' in FLAGS.model_type:
     return LinkModel(num_symbols=config.num_symbols,
                      num_action_types=config.num_action_types,
                      padded_length=config.padded_length,
