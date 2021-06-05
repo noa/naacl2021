@@ -3,8 +3,8 @@
 The code in this repository may be used to reproduce the author ID
 results found in the article:
 
-A Deep Metric Learning Approach to Account Linking. NAACL (2021)
-Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, Nicholas Andrews
+A Deep Metric Learning Approach to Account Linking. NAACL (2021)\
+Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, and Nicholas Andrews\
 [arxiv](https://arxiv.org/abs/2105.07263) [aclweb](https://www.aclweb.org/anthology/2021.naacl-main.415/)
 
 Please cite the paper above if you find this code or ideas from the
