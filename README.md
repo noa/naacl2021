@@ -54,20 +54,16 @@ triplet loss, and varying episode lengths between one and sixteen posts,
 run the command:
 
 ```bash
-./run_training.sh million_user_configs/full_triplet_varying_1_16.cfg
+./run_training.sh full_model.cfg
 ```
 
-Here, `run_training.sh` is a wrapper for the main trainer 
-`scripts/fit.py` and its argument is a configuration file, which 
-consists of a sequence of command-line arguments, one per line. These 
-will override any defaults specified in `scripts/fit.py`. You may also 
-provide additional command-line arguments at the end of the command 
-above. For example, ```bash ./run_training.sh 
-million_user_configs/full_triplet_varying_1_16.cfg --features 
-"action_type+hour" ``` will override any value of `features` specified 
-in *either* `scripts/fit.py` or the configuration file. If you run the 
-`run_training.sh` script on a machine with a GPU, the script should 
-automatically recognize and use a CUDA device.
+Here, `run_training.sh` is a wrapper for the main trainer
+`scripts/fit.py` and its argument is a configuration file, which
+consists of a sequence of command-line arguments, one per line. These
+will override any defaults specified in `scripts/fit.py`. You may also
+provide additional command-line arguments at the end of the command
+above. If you run the `run_training.sh` script on a machine with a
+GPU, the script should automatically recognize and use a CUDA device.
 
 ## Pretrained checkpoints
 
