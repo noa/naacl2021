@@ -40,10 +40,9 @@ https://storage.googleapis.com/naacl21_account_linking/test_queries.tar.gz
 https://storage.googleapis.com/naacl21_account_linking/test_targets.tar.gz
 ```
 
-and save them onto your filesystem. Next, edit the configuration files 
-in `million_user_configs` by updating the values of `--training_queries`, 
-`--train_tfrecord_path`,`--valid_tfrecord_path` to the locations where 
-you saved the data files.
+and save them onto your filesystem. Unpack the files and then run the
+`json2tf.py` script to produce sharded protocol buffer files for
+training.
 
 Next, update the `JOBS_DIR` variable in `run_training.sh` to point to 
 the location on your filesystem where output files should be written.
@@ -54,7 +53,7 @@ triplet loss, and varying episode lengths between one and sixteen posts,
 run the command:
 
 ```bash
-./run_training.sh full_model.cfg
+./run_training.sh full_model.cfg --train_tfrecord_path=<YOUR PATH> --valid_tfrecord_Path=<YOUR PATH>
 ```
 
 Here, `run_training.sh` is a wrapper for the main trainer

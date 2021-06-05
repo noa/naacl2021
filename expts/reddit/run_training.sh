@@ -34,11 +34,10 @@ if [ ! -d "${JOB_DIR}" ]; then
     mkdir -p ${JOB_DIR}
 fi
 
-COMMON="--framework ${FRAMEWORK}"
-COMMON="${COMMON} --expt_dir ${JOB_DIR}"
+COMMON="--expt_dir ${JOB_DIR}"
 COMMON="${COMMON} --num_cpu ${NUM_PROC}"
 COMMON="${COMMON} --fit_verbosity 2"
 
 # Run Training
-python ${TRAINER} ${COMMON} --flagfile ${flagfile} --mode fit
+python ${TRAINER} ${COMMON} --flagfile ${flagfile} --mode fit $@
 python ${TRAINER} ${COMMON} --flagfile ${JOB_DIR}/flags.cfg --mode rank
