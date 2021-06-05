@@ -8,7 +8,7 @@ Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, and Nicholas Andre
 [[arxiv]](https://arxiv.org/abs/2105.07263) [[aclweb]](https://www.aclweb.org/anthology/2021.naacl-main.415/) [[bib]](https://www.aclweb.org/anthology/2021.naacl-main.415.bib)
 
 Please cite the paper above if you find this code or ideas from the
-paper above useful in your own work.
+paper useful in your own research.
 
 ## Dependencies
 
