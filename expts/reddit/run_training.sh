@@ -4,6 +4,9 @@ set -e
 set -u
 set -f  # disable pathname expansion
 
+# Adjust based on your environement
+NUM_PROC=10
+
 # Replace the following directory with your desired working directory:
 JOBS_DIR=/tmp/models
 FRAMEWORK=custom
