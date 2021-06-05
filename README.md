@@ -35,9 +35,9 @@ dataset described in the paper listed above are contained in the
 To run the experiment, first fetch and unpack the data files
 
 ```bash
-https://storage.googleapis.com/emnlp_account_linking/1mil.tar.gz
-https://storage.googleapis.com/emnlp_account_linking/test_queries.tar.gz
-https://storage.googleapis.com/emnlp_account_linking/test_targets.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/1mil.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/test_queries.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/test_targets.tar.gz
 ```
 
 and save them onto your filesystem. Next, edit the configuration files 
@@ -76,8 +76,8 @@ experimental results from the paper:
 
 Checkpoints:
 ```bash
-https://storage.googleapis.com/emnlp_account_linking/full_checkpoint.tar.gz
-https://storage.googleapis.com/emnlp_account_linking/text_time_checkpoint.tar.gz  
+https://storage.googleapis.com/naacl21_account_linking/full_checkpoint.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/text_time_checkpoint.tar.gz
 ```
 
 Pass the `rank` or `link` flags to `scripts/fit.py` to run experiments
