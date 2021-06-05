@@ -1,9 +1,14 @@
 # A Deep Metric Learning Approach to Account Linking
 
-The code in this repository may be used to reproduce the author ID 
+The code in this repository may be used to reproduce the author ID
 results found in the article:
 
 A Deep Metric Learning Approach to Account Linking. NAACL (2021)
+Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, Nicholas Andrews
+[arxiv](https://arxiv.org/abs/2105.07263) [aclweb](https://www.aclweb.org/anthology/2021.naacl-main.415/)
+
+Please cite the paper above if you find this code or ideas from the
+paper above useful in your own work.
 
 ## Dependencies
 
@@ -64,9 +69,16 @@ in *either* `scripts/fit.py` or the configuration file. If you run the
 `run_training.sh` script on a machine with a GPU, the script should 
 automatically recognize and use a CUDA device.
 
+## Pretrained checkpoints
+
+The pre-trained checkpoints below may be used to reproduce
+experimental results from the paper:
+
 Checkpoints:
 ```bash
 https://storage.googleapis.com/emnlp_account_linking/full_checkpoint.tar.gz
 https://storage.googleapis.com/emnlp_account_linking/text_time_checkpoint.tar.gz  
 ```
 
+Pass the `rank` or `link` flags to `scripts/fit.py` to run experiments
+with these models.
