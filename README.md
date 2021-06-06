@@ -50,7 +50,7 @@ training. For example:
 python json2tf.py --json /path/to/unpacked/json --tf /path/to/output/tfrecords --config /path/to/reddit/json/config`
 ```
 
-> **_NOTE:_** This will take several hours for the `1mil.tar.gz` files.
+> NOTE: This will take several hours for the `1mil.tar.gz` files.
 
 Next, update the `JOBS_DIR` variable in `run_training.sh` to point to 
 the location on your filesystem where output files should be written.
