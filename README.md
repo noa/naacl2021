@@ -42,9 +42,10 @@ https://storage.googleapis.com/naacl21_account_linking/test_queries.tar.gz
 https://storage.googleapis.com/naacl21_account_linking/test_targets.tar.gz
 ```
 
-and save them onto your filesystem. Unpack the files and then run the
-`json2tf.py` script to produce sharded protocol buffer files for
-training. For example:
+and save them onto your filesystem, specifically into separate
+subdirectories `train`, `dev`, and `test`, to prevent name
+conflicts. Unpack the files and then run the `json2tf.py` script to
+produce sharded protocol buffer files for training. For example:
 
 ```bash
 python json2tf.py --json /path/to/unpacked/json --tf /path/to/output/tfrecords --config /path/to/reddit/json/config`
@@ -63,6 +64,10 @@ run the command:
 ```bash
 ./run_training.sh full_model.cfg --train_records=<TRAINING DATA> --train_tfrecord_path=<VALIDATION QUERIES> --valid_tfrecord_Path=<VALIDATION TARGETS>
 ```
+
+> NOTE: When specifying the data location, use a wildcard to specify
+  the set of all sharded files. For example, `dev/queries*`, which you
+  might need to quote to prevent your shell from expanding it.
 
 Here, `run_training.sh` is a wrapper for the main trainer
 `scripts/fit.py` and its argument is a configuration file, which
