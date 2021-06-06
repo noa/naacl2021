@@ -14,7 +14,7 @@ paper useful in your own research.
 
 In order to run the software in this repository, the packages listed in 
 `requirements.txt` must be installed. One way to do this is to make a 
-conda environment (`conda create --name py --python=3.8`), activate it, 
+conda environment (`conda create --prefix ./env python=3.8`), activate it (`conda activate ./env`), 
 and run `pip install -r requirements.txt`.
 
 Including the location of this repository in your python path allows you 
