@@ -42,7 +42,13 @@ https://storage.googleapis.com/naacl21_account_linking/test_targets.tar.gz
 
 and save them onto your filesystem. Unpack the files and then run the
 `json2tf.py` script to produce sharded protocol buffer files for
-training.
+training. For example:
+
+```bash
+python json2tf.py --json /path/to/unpacked/json --tf /path/to/output/tfrecords --config /path/to/reddit/json/config`
+```
+
+> **_NOTE:_** This will take several hours for the `1mil.tar.gz` files.
 
 Next, update the `JOBS_DIR` variable in `run_training.sh` to point to 
 the location on your filesystem where output files should be written.
@@ -53,7 +59,7 @@ triplet loss, and varying episode lengths between one and sixteen posts,
 run the command:
 
 ```bash
-./run_training.sh full_model.cfg --train_tfrecord_path=<YOUR PATH> --valid_tfrecord_Path=<YOUR PATH>
+./run_training.sh full_model.cfg --train_records=<TRAINING DATA> --train_tfrecord_path=<VALIDATION QUERIES> --valid_tfrecord_Path=<VALIDATION TARGETS>
 ```
 
 Here, `run_training.sh` is a wrapper for the main trainer
@@ -75,5 +81,5 @@ https://storage.googleapis.com/naacl21_account_linking/full_checkpoint.tar.gz
 https://storage.googleapis.com/naacl21_account_linking/text_time_checkpoint.tar.gz
 ```
 
-Pass the `rank` or `link` flags to `scripts/fit.py` to run experiments
-with these models.
+Pass the `rank` or `link` flags to `scripts/fit.py` to evaluate the
+performance of these checkpoints. See `expts/reddit/test.sh`.

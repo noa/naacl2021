@@ -8,7 +8,7 @@ set -f  # disable pathname expansion
 NUM_PROC=10
 
 # Replace the following directory with your desired working directory:
-JOBS_DIR=/tmp/models
+JOBS_DIR=/tmp/job
 FRAMEWORK=custom
 
 # CLI parsing

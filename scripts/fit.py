@@ -109,8 +109,8 @@ flags.DEFINE_boolean('separable_convolutions', False, 'Use separable convs in te
 flags.DEFINE_string('time_encoding', 'one_hot', "Type of time encoding to use: either [one_hot, cyclical]")
 flags.DEFINE_boolean('freeze_batch_norm_vars', False, 'Freeze batch normalization weights')
 flags.DEFINE_float('proxy_lr_multiplier', 100.0, 'Multiplier to apply to proxies')
-flags.DEFINE_string('training_queries', '',
-                    "Point to different training data, used for training with subset of authors")
+flags.DEFINE_string('training_records', '',
+                    "Training data as sharded tfrecords.")
 flags.DEFINE_boolean('time_based_checkpointing', False, 'Store new checkpoint every hour regardless of performance')
 flags.DEFINE_float('checkpoint_interval', 1.0, 'How often to save a checkpoint, in hours')
 flags.DEFINE_integer('piecewise_decay_steps_1', 80000, 'The first decay point for piecewise decay')
@@ -466,7 +466,6 @@ def link(model, config):
   target_test_vectors, target_test_labels = embedding_and_labels(model, FLAGS.linking_test_targets, config)
   logging.info(f"{target_test_vectors.shape[0]} targets")
 
-
   logging.info(f"Performing linking evaluation")
 
   metrics = author_linking(query_vectors, query_labels,
@@ -630,15 +629,15 @@ def custom_fit(model, config):
     return loss_value
 
   def train(model):
-
-    if FLAGS.training_queries == '':
+    if FLAGS.training_records == '':
       true_query_path = FLAGS.train_tfrecord_path
     else:
-      true_query_path = FLAGS.training_queries
+      true_query_path = FLAGS.training_records
 
-
-    train_ds = build_dataset(true_query_path, config, samples_per_class=FLAGS.samples_per_class,
-                               shuffle=True, random_episode=True, filter_authors=True)
+    train_ds = build_dataset(true_query_path, config,
+                             samples_per_class=FLAGS.samples_per_class,
+                             shuffle=True, random_episode=True,
+                             filter_authors=True)
 
     train_ds = train_ds.take(total_num_steps)
 
@@ -670,7 +669,7 @@ def custom_fit(model, config):
 
         loss = train_one_step(model, optimizer, x, y)
       step += 1
-      # log model summary
+
       if not logged_summary:
         logging.info(len(model.trainable_variables))
         attempt_model_logging(model)
@@ -683,7 +682,8 @@ def custom_fit(model, config):
       if step % 200 == 0:
         with train_summary_writer.as_default():
           tf.summary.scalar('loss', train_loss.result(), step=step)
-          tf.summary.scalar('learning_rate', optimizer.lr(step).numpy(), step=step)
+          tf.summary.scalar('learning_rate',
+                            optimizer.lr(step).numpy(), step=step)
 
       if FLAGS.time_based_checkpointing:
         export_path = get_export_dir()
@@ -702,7 +702,6 @@ def custom_fit(model, config):
         metrics = rank(model.embedding, config)
         if FLAGS.run_linking:
           metrics_link = link(model.embedding, config)
-          # metrics = metrics_link
           metrics = {**metrics, **metrics_link}
 
         logging.info(f"Ranking metrics:")
@@ -723,7 +722,6 @@ def custom_fit(model, config):
             sanity_check_saved_model(model.embedding, config, export_path)
 
   logging.info("Training!")
-  # logging.info(f"Number of params: {model.count_params()}")
   train(model)
 
 
@@ -734,14 +732,12 @@ def fit(config):
                                 'expt_dir'])
   total_num_steps = FLAGS.num_epochs * FLAGS.steps_per_epoch
   logging.info(f"Training for {total_num_steps} steps total")
-  logdir = FLAGS.expt_dir
   checkpoint_file = "weights.{epoch:02d}.ckpt"
   checkpoint_path = get_ckpt_dir() + "/" + checkpoint_file
   checkpoint_dir = os.path.dirname(checkpoint_path)
   logging.info(f"Checkpoint directory: {checkpoint_dir}")
 
   model = Model(config)
-
 
   if FLAGS.warm_start_model:
     logging.info('Warm starting model from:', get_export_dir())
@@ -762,7 +758,6 @@ def handle_flags(argv):
 
 
 def main(argv):
-  # Set global environment flags
   logging.info(f"Limiting to {FLAGS.num_cpu} CPU")
   tf.config.threading.set_inter_op_parallelism_threads(FLAGS.num_cpu)
   tf.config.threading.set_intra_op_parallelism_threads(FLAGS.num_cpu)
@@ -770,26 +765,25 @@ def main(argv):
   config = FeatureConfig.from_json(FLAGS.expt_config_path)
   logging.info(config)
 
-  # Sanity check arguments
-  
   if FLAGS.min_episode_len > FLAGS.episode_len:
     raise ValueError("min_episode_len must be less than or equal to episode_len")
-  
+
   if FLAGS.min_val_len > FLAGS.max_val_len:
     raise ValueError("min_val_len must be less than or equal to max_val_len")
-  
+
   if FLAGS.mode == 'benchmark_ds':
     import tensorflow_datasets as tfds
     ds = build_dataset(FLAGS.train_tfrecord_path, config,
                        samples_per_class=FLAGS.samples_per_class)
     tfds.core.benchmark(ds.take(1000), batch_size=FLAGS.batch_size)
-  
+
   if FLAGS.mode == 'fit':
     handle_flags(argv)
     fit(config)
-  
+
   if FLAGS.mode == 'rank':
-    flags.mark_flags_as_required(['train_tfrecord_path', 'expt_dir', 'valid_tfrecord_path'])
+    flags.mark_flags_as_required(
+        ['train_tfrecord_path', 'expt_dir', 'valid_tfrecord_path'])
     export_dir = get_export_dir()
     logging.info(f"Loading embedding from {export_dir}")
     embedding = load_embedding(config, export_dir)
@@ -798,21 +792,18 @@ def main(argv):
     logging.info(f"Results will be written to {results_file}")
     results = "\n".join([f"{k} {v}" for k, v in metrics.items()])
     logging.info(results)
-  
-  
+
     with open(results_file, 'w') as fh:
       fh.write(results)
-
 
   if FLAGS.mode == 'link':
     export_dir = get_export_dir()
     logging.info(f"Loading embedding from {export_dir}")
     embedding = load_embedding(config, export_dir)
     metrics = link(embedding, config)
-    # logging.info(f"Results will be written to {results_file}")
     results = "\n".join([f"{k} {v}" for k, v in metrics.items()])
     logging.info(results)
-  
+
   if FLAGS.mode == 'embed':
     export_dir = get_export_dir()
     logging.info(f"Loading embedding from {export_dir}")

@@ -33,16 +33,16 @@ from aid.layers import LayerNormalizedProjection
 
 class LinkModel(tf.keras.Model):
     def __init__(self, num_symbols=None, num_action_types=None,
-                 padded_length=None, episode_len=16, embedding_dim=512,
-                 features='syms+action_type+hour', num_layers=2,
-                 d_model=256, num_heads=4, dff=256, dropout_rate=0.1,
+                 padded_length=None, episode_len=16,
+                 embedding_dim=512, num_layers=2, d_model=256,
+                 num_heads=4, dff=256, dropout_rate=0.1,
                  subword_embed_dim=512, action_embed_dim=512,
                  filter_activation='relu', num_filters=256,
                  min_filter_width=2, max_filter_width=5,
-                 final_activation='relu', use_gn=False,
-                 use_GLU=False, use_attn_text_encoder=False,
-                 use_separable_conv=False,
-                 time_encoding='one_hot', **kwargs):
+                 final_activation='relu', use_gn=False, use_GLU=False,
+                 use_attn_text_encoder=False,
+                 use_separable_conv=False, time_encoding='one_hot',
+                 **kwargs):
         super(LinkModel, self).__init__(**kwargs)
 
         self.embedding_dim = embedding_dim
@@ -50,7 +50,6 @@ class LinkModel(tf.keras.Model):
         self.num_action_types = num_action_types
         self.padded_length = padded_length
         self.episode_len = episode_len
-        self.features = features
         self.num_layers = num_layers
         self.d_model = d_model
         self.num_heads = num_heads
@@ -99,39 +98,36 @@ class LinkModel(tf.keras.Model):
     def call(self, inputs, training=False):
         features = []
 
-        if 'syms' in self.features:
-            # Extract text features
-            net = inputs[F.SYMBOLS.value]
-            batch_size = tf.shape(net)[0]
-            episode_len = tf.shape(net)[1]
-            net = tf.reshape(net, [-1, self.padded_length])
-            swe = self.subword_embedding(net)
-            if self.use_attn_text_encoder:
-                net = self.attn_text_encoder(swe, training=training)
-            else:
-                fs = []
-                for width in range(self.min_filter_width, self.max_filter_width + 1):
-                    layer = getattr(self, f'conv_{width}')
-                    net = layer(swe)
-                    if self.use_gn:
-                        layer_norm = getattr(self, f'norm_{width}')
-                        net = layer_norm(net)
-                    net = tf.reduce_max(net, axis=1, keepdims=False)
-                    fs.append(net)
-                net = tf.concat(fs, axis=-1)
-            feature_dim = net.get_shape()[-1]
-            net = tf.reshape(net, [batch_size, episode_len, feature_dim])
-            features.append(net)
+        # Extract text features
+        net = inputs[F.SYMBOLS.value]
+        batch_size = tf.shape(net)[0]
+        episode_len = tf.shape(net)[1]
+        net = tf.reshape(net, [-1, self.padded_length])
+        swe = self.subword_embedding(net)
+        if self.use_attn_text_encoder:
+            net = self.attn_text_encoder(swe, training=training)
+        else:
+            fs = []
+            for width in range(self.min_filter_width, self.max_filter_width + 1):
+                layer = getattr(self, f'conv_{width}')
+                net = layer(swe)
+                if self.use_gn:
+                    layer_norm = getattr(self, f'norm_{width}')
+                    net = layer_norm(net)
+                net = tf.reduce_max(net, axis=1, keepdims=False)
+                fs.append(net)
+            net = tf.concat(fs, axis=-1)
+        feature_dim = net.get_shape()[-1]
+        net = tf.reshape(net, [batch_size, episode_len, feature_dim])
+        features.append(net)
 
-        if 'action' in self.features:
-            # Action embedding
-            embedded_actions = self.action_embedding(inputs[F.ACTION_TYPE.value])
-            features.append(embedded_actions)
+        # Action embedding
+        embedded_actions = self.action_embedding(inputs[F.ACTION_TYPE.value])
+        features.append(embedded_actions)
 
-        if 'hour' in self.features:
-            # Hour embedding
-            hour = inputs[F.HOUR.value]
-            features.append(tf.one_hot(hour, 24, dtype=tf.float32, name='hour_onehot'))
+        # Hour embedding
+        hour = inputs[F.HOUR.value]
+        features.append(tf.one_hot(hour, 24, dtype=tf.float32, name='hour_onehot'))
 
         lengths = inputs[F.NUM_POSTS.value]
         lengths = tf.reshape(lengths, [batch_size])
@@ -150,16 +146,16 @@ class LinkModel(tf.keras.Model):
 
 class LinkTextTimeModel(tf.keras.Model):
     def __init__(self, num_symbols=None, num_action_types=None,
-                 padded_length=None, episode_len=16, embedding_dim=512,
-                 features='syms+action_type+hour', num_layers=2,
-                 d_model=256, num_heads=4, dff=256, dropout_rate=0.1,
+                 padded_length=None, episode_len=16,
+                 embedding_dim=512, num_layers=2, d_model=256,
+                 num_heads=4, dff=256, dropout_rate=0.1,
                  subword_embed_dim=512, action_embed_dim=512,
                  filter_activation='relu', num_filters=256,
                  min_filter_width=2, max_filter_width=5,
-                 final_activation='relu', use_gn=False,
-                 use_GLU=False, use_attn_text_encoder=False,
-                 use_separable_conv=False,
-                 time_encoding='one_hot', **kwargs):
+                 final_activation='relu', use_gn=False, use_GLU=False,
+                 use_attn_text_encoder=False,
+                 use_separable_conv=False, time_encoding='one_hot',
+                 **kwargs):
         super(LinkTextTimeModel, self).__init__(**kwargs)
 
         self.embedding_dim = embedding_dim
@@ -167,7 +163,6 @@ class LinkTextTimeModel(tf.keras.Model):
         self.num_action_types = num_action_types
         self.padded_length = padded_length
         self.episode_len = episode_len
-        self.features = features
         self.num_layers = num_layers
         self.d_model = d_model
         self.num_heads = num_heads
