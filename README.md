@@ -36,6 +36,8 @@ To run the experiment, first fetch and unpack the data files
 
 ```bash
 https://storage.googleapis.com/naacl21_account_linking/1mil.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/dev_queries.tar.gz
+https://storage.googleapis.com/naacl21_account_linking/dev_targets.tar.gz
 https://storage.googleapis.com/naacl21_account_linking/test_queries.tar.gz
 https://storage.googleapis.com/naacl21_account_linking/test_targets.tar.gz
 ```
