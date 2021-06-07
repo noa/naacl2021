@@ -17,12 +17,13 @@ In order to run the software in this repository, the packages listed in
 conda environment (`conda create --prefix ./env python=3.8`), activate it (`conda activate ./env`), 
 and run `pip install -r requirements.txt`.
 
-Including the location of this repository in your python path allows you 
-to execute `import aid` in python:
+Then, include the location of this repository in your Python path:
 
 ```bash
 export PYTHONPATH=$PYTHONPATH:${PATH_TO_THIS_REPOSITORY}
 ```
+
+will enable you to import the `aid` (author ID) package.
 
 ## Running an experiment
 
