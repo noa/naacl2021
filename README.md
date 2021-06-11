@@ -27,13 +27,7 @@ will enable you to import the `aid` (author ID) package.
 
 ## Running an experiment
 
-All the files related to experiments with particular datasets are 
-intended to be contained in corresponding sub-directories of `expts`. 
-For example, the files needed to reproduce the results with the Reddit 
-dataset described in the paper listed above are contained in the 
-`expts/reddit` sub-directory.
-
-To run the experiment, first fetch and unpack the data files
+To run an experiment, first fetch and unpack the data files
 
 ```bash
 https://storage.googleapis.com/naacl21_account_linking/1mil.tar.gz
