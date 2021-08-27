@@ -10,6 +10,8 @@ Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, and Nicholas Andre
 Please cite the paper above if you find this code or ideas from the
 paper useful in your own research.
 
+For the latest related work, please see: https://cs.jhu.edu/~noa
+
 ## Dependencies
 
 In order to run the software in this repository, the packages listed in 
