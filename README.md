@@ -7,7 +7,7 @@ A Deep Metric Learning Approach to Account Linking. NAACL (2021)\
 Aleem Khan, Elizabeth Fleming, Noah Schofield, Marcus Bishop, and Nicholas Andrews\
 [[arxiv]](https://arxiv.org/abs/2105.07263) [[aclweb]](https://www.aclweb.org/anthology/2021.naacl-main.415/) [[bib]](https://www.aclweb.org/anthology/2021.naacl-main.415.bib)
 
-We provide instructions to use the preprocessed data below. To access the raw dataset, please complete this form: https://forms.gle/TRga2LANBf4Zfo6W9
+We provide instructions to use the preprocessed data below. To access the raw dataset (~23G), please complete this form: https://forms.gle/TRga2LANBf4Zfo6W9
 
 Please cite the paper above if you find this code or ideas from the
 paper useful in your own research.
